@@ -22,10 +22,11 @@ import jakarta.inject.Singleton;
 import org.camunda.bpm.engine.rest.impl.FetchAndLockContextListener;
 import org.camunda.bpm.engine.rest.security.auth.ProcessEngineAuthenticationFilter;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.ee8.servlet.FilterHolder;
+import org.eclipse.jetty.ee8.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee8.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +95,7 @@ public class JettyServerCustomizerRuntimeRest implements ParallelInitializationW
 
         restServletContextHandler.setServer(server);
         restServletContextHandler.start();
-        ((HandlerCollection)server.getHandler()).addHandler(restServletContextHandler);
+        ((ContextHandlerCollection)server.getHandler()).addHandler(restServletContextHandler);
 
         log.info("REST API initialized on {}/*", contextPath);
     }

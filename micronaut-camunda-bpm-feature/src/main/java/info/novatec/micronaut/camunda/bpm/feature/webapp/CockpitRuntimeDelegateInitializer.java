@@ -20,17 +20,20 @@ import info.novatec.micronaut.camunda.bpm.feature.initialization.ParallelInitial
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.transaction.SynchronousTransactionManager;
 import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import org.camunda.bpm.cockpit.Cockpit;
 import org.camunda.bpm.cockpit.CockpitRuntimeDelegate;
 import org.camunda.bpm.cockpit.db.CommandExecutor;
 import org.camunda.bpm.cockpit.impl.DefaultCockpitRuntimeDelegate;
+import org.camunda.bpm.cockpit.impl.db.CommandExecutorImpl;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.impl.interceptor.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.util.List;
 
 /**
  * Replacing the {@link CockpitRuntimeDelegate} on server startup makes sure that the following scenario in cockpit
@@ -66,25 +69,30 @@ public class CockpitRuntimeDelegateInitializer implements ParallelInitialization
         Cockpit.setCockpitRuntimeDelegate(new DefaultCockpitRuntimeDelegate() {
             @Override
             protected CommandExecutor createCommandExecutor(String processEngineName) {
-                return new org.camunda.bpm.cockpit.impl.db.CommandExecutorImpl(processEngineConfiguration, getMappingFiles() ) {
-                    @Override
-                    public <T> T executeCommand(Command<T> command) {
-                        return transactionManager.executeWrite( transactionStatus -> {
-                            T result = super.executeCommand(command);
-                            Connection connection = transactionManager.getConnection();
-                            if (connection.getAutoCommit()) {
-                                // We disable auto-commit here, otherwise PostgreSQL will fail with exception "org.postgresql.util.PSQLException: Cannot commit when autoCommit is enabled."
-                                // See also JdbcTransaction#resetAutoCommit where MyBatis enables auto-commit
-                                // See also DataSourceTransactionManager#doBegin which does the same as we do here. It seems that Micronaut always wants to take full control.
-                                log.debug("Switching JDBC Connection [{}] to manual commit", connection);
-                                connection.setAutoCommit(false);
-                            }
-                            return result;
-                        });
-                    }
-                };
+                return getCommandExecutor2(getMappingFiles());
             }
         });
         log.debug("Replaced CockpitRuntimeDelegate {} with {} to enable transactions for the Cockpit", cockpitRuntimeDelegate, Cockpit.getRuntimeDelegate());
+    }
+
+    @Transactional
+    public CommandExecutorImpl getCommandExecutor2(List<String> mappingFiles) {
+        return new CommandExecutorImpl(processEngineConfiguration, mappingFiles) {
+            @Override
+            public <T> T executeCommand(Command<T> command) {
+                return transactionManager.executeWrite(transactionStatus -> {
+                    T result = super.executeCommand(command);
+                    Connection connection = transactionManager.getConnection();
+                    if (connection.getAutoCommit()) {
+                        // We disable auto-commit here, otherwise PostgreSQL will fail with exception "org.postgresql.util.PSQLException: Cannot commit when autoCommit is enabled."
+                        // See also JdbcTransaction#resetAutoCommit where MyBatis enables auto-commit
+                        // See also DataSourceTransactionManager#doBegin which does the same as we do here. It seems that Micronaut always wants to take full control.
+                        log.debug("Switching JDBC Connection [{}] to manual commit", connection);
+                        connection.setAutoCommit(false);
+                    }
+                    return result;
+                });
+            }
+        };
     }
 }

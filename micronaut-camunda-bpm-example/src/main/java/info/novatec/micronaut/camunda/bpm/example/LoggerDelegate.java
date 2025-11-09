@@ -15,6 +15,7 @@
  */
 package info.novatec.micronaut.camunda.bpm.example;
 
+import io.micronaut.context.annotation.Primary;
 import jakarta.inject.Singleton;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
+@Primary
 public class LoggerDelegate implements JavaDelegate {
 
     private static final Logger log = LoggerFactory.getLogger(LoggerDelegate.class);

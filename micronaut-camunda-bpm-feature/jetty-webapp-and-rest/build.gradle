@@ -19,7 +19,7 @@ dependencies {
     testRuntimeOnly("com.h2database:h2")
     testRuntimeOnly("ch.qos.logback:logback-classic")
 
-    kaptTest(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    kaptTest(platform("io.micronaut.platform:micronaut-platform:$micronautVersion"))
     kaptTest("io.micronaut.data:micronaut-data-processor")
     kaptTest("io.micronaut:micronaut-inject-java:$micronautVersion")
 
@@ -28,7 +28,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core")
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.eclipse.jetty:jetty-server:$jettyVersion")
-    testImplementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
+    testImplementation("org.eclipse.jetty.ee8:jetty-ee8-servlet:$jettyVersion")
 }
 
 application {

@@ -20,8 +20,8 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.core.naming.conventions.StringConvention;
+import jakarta.validation.constraints.NotNull;
 
-import javax.validation.constraints.NotNull;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +90,7 @@ public interface Configuration {
         Optional<String> getCreate();
     }
 
-    @ConfigurationProperties("adminUser")
+    @ConfigurationProperties("admin-user")
     interface AdminUser {
 
         /**

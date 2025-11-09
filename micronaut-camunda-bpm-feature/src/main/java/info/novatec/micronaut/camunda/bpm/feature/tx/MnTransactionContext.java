@@ -17,9 +17,8 @@ package info.novatec.micronaut.camunda.bpm.feature.tx;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.transaction.SynchronousTransactionManager;
+import io.micronaut.transaction.TransactionStatus;
 import io.micronaut.transaction.support.TransactionSynchronization;
-import io.micronaut.transaction.support.TransactionSynchronizationAdapter;
-import io.micronaut.transaction.support.TransactionSynchronizationManager;
 import org.camunda.bpm.engine.impl.cfg.TransactionContext;
 import org.camunda.bpm.engine.impl.cfg.TransactionListener;
 import org.camunda.bpm.engine.impl.cfg.TransactionState;
@@ -45,7 +44,7 @@ public class MnTransactionContext implements TransactionContext {
         this.commandContext = commandContext;
         this.transactionManager = transactionManager;
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+        transactionManager.findTransactionStatus().get().registerSynchronization(new TransactionSynchronization() {
             @Override
             public void beforeCommit(boolean readOnly) {
                 lastTransactionState = COMMITTING;
@@ -87,7 +86,7 @@ public class MnTransactionContext implements TransactionContext {
         TransactionSynchronization transactionSynchronization;
         switch (transactionState) {
             case COMMITTING:
-                transactionSynchronization = new TransactionSynchronizationAdapter() {
+                transactionSynchronization = new TransactionSynchronization() {
                     @Override
                     public void beforeCommit(boolean readOnly) {
                         transactionListener.execute(commandContext);
@@ -95,7 +94,7 @@ public class MnTransactionContext implements TransactionContext {
                 };
                 break;
             case COMMITTED:
-                transactionSynchronization = new TransactionSynchronizationAdapter() {
+                transactionSynchronization = new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
                         transactionListener.execute(commandContext);
@@ -103,7 +102,7 @@ public class MnTransactionContext implements TransactionContext {
                 };
                 break;
             case ROLLINGBACK:
-                transactionSynchronization = new TransactionSynchronizationAdapter() {
+                transactionSynchronization = new TransactionSynchronization() {
                     @Override
                     public void beforeCompletion() {
                         transactionListener.execute(commandContext);
@@ -111,7 +110,7 @@ public class MnTransactionContext implements TransactionContext {
                 };
                 break;
             case ROLLED_BACK:
-                transactionSynchronization = new TransactionSynchronizationAdapter() {
+                transactionSynchronization = new TransactionSynchronization() {
                     @Override
                     public void afterCompletion(@NonNull Status status) {
                         if (Status.ROLLED_BACK == status) {
@@ -123,12 +122,14 @@ public class MnTransactionContext implements TransactionContext {
             default:
                 throw new IllegalStateException("Unknown transaction state: " + transactionState);
         }
-        TransactionSynchronizationManager.registerSynchronization(transactionSynchronization);
+        transactionManager.findTransactionStatus().get().registerSynchronization(transactionSynchronization);
     }
 
     @Override
     public boolean isTransactionActive() {
-        return TransactionSynchronizationManager.isActualTransactionActive()
+        TransactionStatus<?> transactionStatus = transactionManager.findTransactionStatus().orElse(null);
+        return transactionStatus != null
+                &&transactionStatus.getTransaction() != null
                 && ROLLED_BACK != lastTransactionState
                 && ROLLINGBACK != lastTransactionState;
     }

@@ -19,8 +19,8 @@ import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import jakarta.inject.Singleton;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 
 /**
  * @author Martin Sawilla
@@ -33,7 +33,7 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
     public Server onCreated(BeanCreatedEvent<Server> event) {
         Server jettyServer = event.getBean();
 
-        HandlerCollection handlers = new ContextHandlerCollection();
+        ContextHandlerCollection handlers = new ContextHandlerCollection();
         handlers.addHandler(jettyServer.getHandler());
 
         jettyServer.setHandler(handlers);

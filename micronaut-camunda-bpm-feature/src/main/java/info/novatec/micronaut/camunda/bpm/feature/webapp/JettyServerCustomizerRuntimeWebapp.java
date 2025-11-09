@@ -30,14 +30,16 @@ import org.camunda.bpm.webapp.impl.security.filter.CsrfPreventionFilter;
 import org.camunda.bpm.webapp.impl.security.filter.headersec.HttpHeaderSecurityFilter;
 import org.camunda.bpm.webapp.impl.security.filter.util.HttpSessionMutexListener;
 import org.camunda.bpm.welcome.impl.web.bootstrap.WelcomeContainerBootstrap;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.session.SessionHandler;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.ee8.servlet.DefaultServlet;
+import org.eclipse.jetty.ee8.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee8.servlet.ServletHolder;
+import org.eclipse.jetty.ee8.nested.SessionHandler;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,10 +143,11 @@ public class JettyServerCustomizerRuntimeWebapp implements ParallelInitializatio
         webappsContextHandler.setContextPath(contextPath);
 
         // see https://stackoverflow.com/questions/11410388/add-more-than-one-resource-directory-to-jetty
-        // and https://www.eclipse.org/jetty/documentation/jetty-9/index.html#resource-handler
-        Resource webappsResource = Resource.newClassPathResource("/META-INF/resources/webjars/camunda");
-        Resource pluginsResource = Resource.newClassPathResource("/META-INF/resources");
-        ResourceCollection resources = new ResourceCollection(webappsResource, pluginsResource);
+        // and https://www.eclipse.org/jetty/documentation/jetty-12/index.html
+        ResourceFactory resourceFactory = ResourceFactory.root();
+        Resource webappsResource = resourceFactory.newClassLoaderResource("/META-INF/resources/webjars/camunda");
+        Resource pluginsResource = resourceFactory.newClassLoaderResource("/META-INF/resources");
+        Resource resources = ResourceFactory.combine(webappsResource, pluginsResource);
         webappsContextHandler.setBaseResource(resources);
 
         webappsContextHandler.addEventListener(new CockpitContainerBootstrap());
@@ -158,7 +161,7 @@ public class JettyServerCustomizerRuntimeWebapp implements ParallelInitializatio
 
         webappsContextHandler.setServer(server);
         webappsContextHandler.start();
-        ((HandlerCollection)server.getHandler()).addHandler(webappsContextHandler);
+        ((Handler.Sequence)server.getHandler()).addHandler(webappsContextHandler);
 
         log.info("Webapps initialized on {}", contextPath);
     }
