@@ -1,4 +1,4 @@
-# micronaut-camunda-platform-7
+# micronaut-camunda-platform-7 Migrated to [Operaton](https://operaton.org/) as PoC. The following text still refers to Camunda but it has been replaced With Operaton in code.
 
 [![Release](https://img.shields.io/github/v/release/camunda-community-hub/micronaut-camunda-platform-7.svg)](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/releases)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
