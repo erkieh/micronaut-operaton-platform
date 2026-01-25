@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: jetty-webapp-and-rest
+operaton:
+  admin-user:
+    id: admin
+    password: admin
+  webapps:
+    enabled: true
+  rest:
+    enabled: true

@@ -1,0 +1,44 @@
+plugins {
+    id("io.micronaut.application")
+}
+
+group = "info.novatec"
+
+micronaut {
+    runtime("jetty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("micronaut.operaton.bpm.example.*")
+    }
+}
+
+dependencies {
+    implementation(project(":micronaut-operaton-bpm-feature"))
+    implementation("io.micronaut:micronaut-discovery-core")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
+
+    // Test
+    testImplementation("io.micronaut:micronaut-http-client")
+
+    testImplementation("org.operaton.bpm:operaton-bpm-assert:$operatonVersion")
+    testImplementation("org.assertj:assertj-core")
+}
+
+application {
+    mainClass.set("info.novatec.micronaut.operaton.bpm.example.Application")
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+dockerfile {
+    args.set(['-Dmicronaut.server.host=0.0.0.0'])
+}
+
+graalvmNative.toolchainDetection = false
