@@ -1,6 +1,6 @@
 # micronaut-camunda-platform-7 Migrated to [Operaton](https://operaton.org/) as PoC. The following text still refers to Camunda but it has been replaced With Operaton in code.
 
-[![Release](https://img.shields.io/github/v/release/camunda-community-hub/micronaut-camunda-platform-7.svg)](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/releases)
+[![Release](https://img.shields.io/github/v/release/camunda-community-hub/micronaut-camunda-platform-7.svg)](https://github.com/operaton/operaton/releases)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Continuous Integration](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/workflows/Continuous%20Integration/badge.svg)](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/actions)
 [![GitHub Discussions](https://img.shields.io/badge/Forum-GitHub_Discussions-blue)](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/discussions)
@@ -84,11 +84,9 @@ Micronaut Framework + Camunda = :heart:
 
 # 🚀Getting Started
 
-This section describes what needs to be done to use `micronaut-camunda-bpm-feature` in a Micronaut project.
+This section describes what needs to be done to use `micronaut-operaton-bpm-feature` in a Micronaut project.
 
 ## Create Project with Micronaut Launch
-
-Create a new Micronaut project using [Micronaut Launch](https://micronaut.io/launch?name=micronaut-camunda&features=camunda-platform7) and check that the "camunda-platform7" feature is selected.
 
 This will take care of the following:
 * If you don't explicitly select any database then an in-memory H2 will be included by default.
@@ -216,7 +214,7 @@ You may use the following properties (typically in application.yml) to configure
 
 ### Generic Properties
 
-The process engine can be configured using generic properties listed in Camunda's Documentation: [Configuration Properties](https://docs.camunda.org/manual/latest/reference/deployment-descriptors/tags/process-engine/#configuration-properties).
+The process engine can be configured using generic properties listed in Operaton's Documentation: [Configuration Properties](https://docs.operaton.org/docs/documentation/user-guide/spring-boot-integration/configuration).
 
 The properties can be set in kebab case (lowercase and hyphen separated) or camel case (indicating the separation of words with a single capitalized letter as written in Camunda's documentation). Kebab case is preferred when setting properties.
 
@@ -227,7 +225,7 @@ Some of the most relevant properties are:
 Example:
 
 ```yaml
-camunda:
+operaton:
   generic-properties:
     properties:
       history: audit
@@ -244,9 +242,9 @@ Here are some example applications:
 ## Supported JDKs
 
 We officially support the following JDKs:
-* JDK 8 (LTS) up to Camunda 7.19, i.e. with release [v2.15.0](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/releases/tag/v2.15.0)
-* JDK 11 (LTS) up to Camunda 7.22, i.e. with release [v2.18.1](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/releases/tag/v2.18.1)
 * JDK 17 (LTS)
+* JDK 21 (LTS)
+* JDK 25 (LTS)
 
 # 🏆Advanced Topics
 
@@ -254,14 +252,12 @@ We officially support the following JDKs:
 
 The Camunda integration works with both Gradle and Maven, but we recommend using Gradle because it has better Micronaut Support.
 
-If you create a new project then simply use the feature `features=camunda-platform7` as described in [Getting Started](#getting-started) section. However, you can also manage the dependencies yourself as described here:
-
 <details>
 <summary>Click to show Gradle configuration</summary>
 
 Add the dependency to the build.gradle file:
 ```groovy
-implementation("info.novatec:micronaut-camunda-bpm-feature:2.20.0")
+implementation("info.novatec:micronaut-operaton-bpm-feature:2.20.0")
 runtimeOnly("com.h2database:h2")
 ```
 </details>
@@ -273,7 +269,7 @@ Add the dependency to the pom.xml file:
 ```xml
 <dependency>
   <groupId>info.novatec</groupId>
-  <artifactId>micronaut-camunda-bpm-feature</artifactId>
+  <artifactId>micronaut-operaton-bpm-feature</artifactId>
   <version>2.19.o</version>
 </dependency>
 <dependency>
@@ -284,7 +280,7 @@ Add the dependency to the pom.xml file:
 ```
 </details>
 
-Note: The module `micronaut-camunda-bpm-feature` includes the dependency `org.operaton.bpm:operaton-engine` which will be resolved transitively.
+Note: The module `micronaut-operaton-bpm-feature` includes the dependency `org.operaton.bpm:operaton-engine` which will be resolved transitively.
 
 ## Camunda REST API and Webapps
 
@@ -340,7 +336,7 @@ and replace it with
 By default, REST API and the Webapps are not enabled. You have to configure them e.g. in the application.yaml as follows:
 
 ```yaml
-camunda:
+operaton:
   webapps:
     enabled: true
   rest:
@@ -440,7 +436,7 @@ on how to do that. Keep in mind using the correct version of the libraries.
 
 In `build.gradle`:
 ```groovy
-implementation("info.novatec:micronaut-camunda-bpm-feature:2.20.0") {
+implementation("info.novatec:micronaut-operaton-bpm-feature:2.20.0") {
     exclude group: 'org.operaton.bpm.webapp', module: 'camunda-webapp-webjar'
     exclude group: 'org.operaton.bpm', module: 'operaton-engine'
 }
@@ -456,7 +452,7 @@ In `pom.xml`:
 ```xml
 <dependency>
   <groupId>info.novatec</groupId>
-  <artifactId>micronaut-camunda-bpm-feature</artifactId>
+  <artifactId>micronaut-operaton-bpm-feature</artifactId>
   <version>2.20.0</version>
   <exclusions>
     <exclusion>
@@ -953,7 +949,7 @@ Here is a complete example: [HelloWorldProcessTest](/micronaut-camunda-bpm-examp
 
 # 📚Releases
 
-The list of [releases](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/releases) contains a detailed changelog.
+The list of [releases](https://github.com/operaton/operaton/releases) contains a detailed changelog.
 
 We use [Semantic Versioning](https://semver.org/).
 
@@ -1035,8 +1031,8 @@ Other combinations might also work but have not been tested.
 
 
 Download of Releases:
-* [GitHub Artifacts](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/releases)
-* [Maven Central Artifacts](https://search.maven.org/artifact/info.novatec/micronaut-camunda-bpm-feature)
+* [GitHub Artifacts](https://github.com/operaton/operaton/releases)
+* [Maven Central Artifacts](https://search.maven.org/artifact/info.novatec/micronaut-operaton-bpm-feature)
 
 # 📆Publications
 
@@ -1053,7 +1049,7 @@ Download of Releases:
 
 # 📨Contact
 
-If you have any questions or ideas feel free to create an [issue](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/issues) or contact us via [GitHub Discussions](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/discussions).
+If you have any questions or ideas feel free to create an [issue](https://forum.operaton.org/c/community/7) or contact us via [GitHub Discussions](https://github.com/camunda-community-hub/micronaut-camunda-platform-7/discussions).
 
 We love listening to your feedback, and of course also discussing the project roadmap and possible use cases with you!
 

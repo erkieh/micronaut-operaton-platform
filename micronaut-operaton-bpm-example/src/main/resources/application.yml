@@ -1,0 +1,23 @@
+micronaut:
+  application:
+    name: micronaut-operaton-example
+netty:
+  default:
+    allocator:
+      max-order: 3
+operaton:
+  locations:
+    - classpath:bpm
+  admin-user:
+    id: admin
+    password: admin
+  webapps:
+    enabled: true
+  rest:
+    enabled: true
+  filter:
+    create: "All tasks"
+  eventing:
+    task: false
+    execution: false
+    history: false
