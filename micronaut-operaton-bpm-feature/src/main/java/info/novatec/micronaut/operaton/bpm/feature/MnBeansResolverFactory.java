@@ -21,6 +21,7 @@ import io.micronaut.core.annotation.AnnotationUtil;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.naming.NameResolver;
 import io.micronaut.inject.BeanDefinition;
+import io.micronaut.inject.qualifiers.AnyQualifier;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import jakarta.inject.Singleton;
 import org.operaton.bpm.engine.delegate.VariableScope;
@@ -59,10 +60,17 @@ public class MnBeansResolverFactory implements ResolverFactory, Resolver {
         if (key instanceof String) {
             Qualifier<Object> qualifier = Qualifiers.byName((String) key);
             if (applicationContext.containsBean(Object.class, qualifier)) {
-                return applicationContext.getBean(Object.class, qualifier);
+                return getBean(qualifier, applicationContext);
             }
         }
         return null;
+    }
+
+    static Object getBean(Qualifier<Object> qualifier, ApplicationContext applicationContext) {
+        BeanDefinition<?> definition = applicationContext.getBeanDefinitions(qualifier).stream()
+                .filter(beanDefinition -> !(beanDefinition.getDeclaredQualifier() instanceof AnyQualifier<?>))
+                .findFirst().get();
+        return applicationContext.getBean(definition);
     }
 
     @Override

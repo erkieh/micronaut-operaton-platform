@@ -52,7 +52,7 @@ class BeanInvocationTest {
         ProcessUtil.deploy(repositoryService, Bpmn.createProcess(processId)
                 .executable()
                 .startEvent()
-                .serviceTask().operatonExpression("\${myDelegate}")
+                .serviceTask().operatonDelegateExpression("\${myDelegate}")
                 .endEvent())
         runtimeService.startProcessInstanceByKey(processId)
         verify(myDelegate).execute(ArgumentMatchers.any(DelegateExecution::class.java))

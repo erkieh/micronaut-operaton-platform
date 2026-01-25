@@ -22,6 +22,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import jakarta.inject.Inject
 import org.operaton.bpm.engine.ProcessEngine
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -33,7 +34,7 @@ import java.util.*
  */
 class FilterAllTaskCreatorTest {
 
-    @MicronautTest
+    @MicronautTest(rebuildContext = true)
     @Nested
     inner class NoFilter {
 
@@ -43,6 +44,14 @@ class FilterAllTaskCreatorTest {
         @Inject
         lateinit var filterAllTaskCreator: Optional<FilterAllTaskCreator>
 
+        @BeforeEach
+        fun cleanupDatabase() {
+            // Clean up filters from previous tests
+            processEngine.filterService.createFilterQuery().list().forEach {
+                processEngine.filterService.deleteFilter(it.id)
+            }
+        }
+
         @Test
         fun `filter is not created` () {
             assertFalse(filterAllTaskCreator.isPresent)
@@ -50,7 +59,7 @@ class FilterAllTaskCreatorTest {
         }
     }
 
-    @MicronautTest
+    @MicronautTest(rebuildContext = true)
     @Property(name = "operaton.filter.create", value = "Custom Filter")
     @Nested
     inner class Filter {

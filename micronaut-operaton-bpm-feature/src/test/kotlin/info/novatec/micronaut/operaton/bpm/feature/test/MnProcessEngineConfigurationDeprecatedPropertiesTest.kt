@@ -37,7 +37,7 @@ class MnProcessEngineConfigurationDeprecatedPropertiesTest {
 
     @Test
     fun `deprecated camunda-bpm property prevents application start`() {
-        val properties = Collections.singletonMap<String, Any>("operaton.bpm.generic-properties.properties.dmn-enabled", true)
+        val properties = Collections.singletonMap<String, Any>("camunda.bpm.generic-properties.properties.dmn-enabled", true)
         Assertions.assertThrows(RuntimeException::class.java) { ApplicationContext.run(EmbeddedServer::class.java, properties) }
     }
 }

@@ -28,6 +28,7 @@ import org.operaton.bpm.engine.authorization.Groups.GROUP_TYPE_SYSTEM
 import org.operaton.bpm.engine.authorization.Resources
 import org.operaton.bpm.engine.identity.User
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -38,7 +39,7 @@ import java.util.*
  * @author Titus Meyer
  */
 class AdminUserCreatorTest {
-    @MicronautTest
+    @MicronautTest(rebuildContext = true)
     @Nested
     inner class AdminUserCreatorTestWithoutProperties {
         @Inject
@@ -50,6 +51,14 @@ class AdminUserCreatorTest {
         @Inject
         lateinit var adminUserCreator: Optional<AdminUserCreator>
 
+        @BeforeEach
+        fun cleanupDatabase() {
+            // Clean up users from previous tests
+            processEngine.identityService.createUserQuery().list().forEach {
+                processEngine.identityService.deleteUser(it.id)
+            }
+        }
+
         @Test
         fun adminUserNotDefined() {
             assertThrows(PropertyNotFoundException::class.java) { configuration.adminUser.id }
@@ -58,7 +67,7 @@ class AdminUserCreatorTest {
         }
     }
 
-    @MicronautTest
+    @MicronautTest(rebuildContext = true)
     @Property(name = "operaton.admin-user.id", value = "admin")
     @Property(name = "operaton.admin-user.password", value = "admin")
     @Property(name = "operaton.admin-user.firstname", value = "Donald")
@@ -114,7 +123,7 @@ class AdminUserCreatorTest {
         }
     }
 
-    @MicronautTest
+    @MicronautTest(rebuildContext = true)
     @Property(name = "operaton.admin-user.id", value = "admin2")
     @Property(name = "operaton.admin-user.password", value = "admin2")
     @Nested

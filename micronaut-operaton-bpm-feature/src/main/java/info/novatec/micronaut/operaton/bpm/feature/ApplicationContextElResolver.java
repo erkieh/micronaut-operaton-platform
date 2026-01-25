@@ -25,6 +25,8 @@ import org.operaton.bpm.engine.ProcessEngineException;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
+import static info.novatec.micronaut.operaton.bpm.feature.MnBeansResolverFactory.getBean;
+
 /**
  * @author Tobias Schäfer
  */
@@ -46,7 +48,7 @@ public class ApplicationContextElResolver extends ELResolver {
             Qualifier<Object> qualifier = Qualifiers.byName(key);
             if (applicationContext.containsBean(Object.class, qualifier)) {
                 context.setPropertyResolved(true);
-                return applicationContext.getBean(Object.class, qualifier);
+                return getBean(qualifier, applicationContext);
             }
         }
 

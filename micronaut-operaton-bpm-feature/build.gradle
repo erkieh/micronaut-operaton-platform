@@ -22,6 +22,8 @@ dependencies {
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-runtime")
     implementation("com.fasterxml.uuid:java-uuid-generator:5.1.1")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    runtimeOnly("org.yaml:snakeyaml")
     api("org.operaton.bpm:operaton-engine:$operatonVersion") {
         exclude group: 'org.operaton.bpm.model', module: 'operaton-cmmn-model'
     }
