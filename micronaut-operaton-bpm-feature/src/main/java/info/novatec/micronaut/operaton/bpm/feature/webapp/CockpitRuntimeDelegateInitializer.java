@@ -38,19 +38,19 @@ import java.util.List;
 /**
  * Replacing the {@link CockpitRuntimeDelegate} on server startup makes sure that the following scenario in cockpit
  * to view process instances works: Cockpit / Process Definitions / Any Definition, e.g. HelloWorld
- * by embedding the command execution in a transaction.
- *
+ * by embedding the command execution in a transaction. Possibly Legacy code here.
+ * <p>
  * Set a breakpoint in {@link JdbcTransaction#openConnection()} to see which data source is being used:
  * Works: {@link io.micronaut.configuration.jdbc.hikari.HikariUrlDataSource}
- * Doesn't work: {@link io.micronaut.transaction.jdbc.TransactionAwareDataSource}.
+ * In Micronaut 3 Doesn't work: io.micronaut.transaction.jdbc.TransactionAwareDataSource
  * In case of TransactionAwareDataSource a {@link io.micronaut.transaction.jdbc.exceptions.CannotGetJdbcConnectionException}
- * will be thrown in {@link io.micronaut.transaction.jdbc.DataSourceUtils#doGetConnection(javax.sql.DataSource, boolean)} because
+ * was thrown in o.micronaut.transaction.jdbc.DataSourceTransactionManager#doGetConnection(javax.sql.DataSource, boolean) because
  * "allowCreate" is false.
  *
  * @author Tobias Schäfer
  */
 @Singleton
-@Requires(property = "operaton.webapps.enabled", value="true")
+@Requires(property = "operaton.webapps.enabled", value = "true")
 public class CockpitRuntimeDelegateInitializer implements ParallelInitializationWithProcessEngine {
 
     private static final Logger log = LoggerFactory.getLogger(CockpitRuntimeDelegateInitializer.class);
