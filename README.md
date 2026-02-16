@@ -1,6 +1,6 @@
 # micronaut-operaton-platform
 
-This project has been migrated from Operaton 7 to [Operaton](https://operaton.org/), a community-driven, open-source BPMN engine and fork of Operaton 7.
+This project has been migrated from Camunda 7 to [Operaton](https://operaton.org/), a community-driven, open-source BPMN engine and fork of Operaton 7.
 
 [![Release]](https://github.com/operaton/operaton/releases)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
