@@ -872,11 +872,6 @@ If you have any questions or ideas feel free to create a topic in the [Operaton 
 
 We love listening to your feedback, and of course also discussing the project roadmap and possible use cases with you!
 
-This open source project is being developed by [envite consulting GmbH](https://envite.de/) and [Novatec Consulting GmbH](https://www.novatec-gmbh.de/en/) with the support of the open source community.
-
----
-![envite consulting GmbH](envite-black.png#gh-light-mode-only)
-![envite consulting GmbH](envite-white.png#gh-dark-mode-only)
 ---
 ![Novatec Consulting GmbH](novatec.jpeg)
 ---
