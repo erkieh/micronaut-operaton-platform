@@ -873,5 +873,3 @@ If you have any questions or ideas feel free to create a topic in the [Operaton 
 We love listening to your feedback, and of course also discussing the project roadmap and possible use cases with you!
 
 ---
-![Novatec Consulting GmbH](novatec.jpeg)
----
