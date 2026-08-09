@@ -49,20 +49,14 @@ dependencies {
     api("io.micronaut.sql:micronaut-jdbc-hikari")
 
     // REST API + Webapps
-    implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider")
-    implementation("org.operaton.bpm.webapp:operaton-webapp-webjar:$operatonVersion") {
-        exclude group: 'org.operaton.bpm.webapp', module: 'operaton-webapp-jakarta'
-    }
+    implementation("com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider")
+    implementation("org.operaton.bpm.webapp:operaton-webapp-webjar:$operatonVersion")
     implementation("org.operaton.bpm.webapp:operaton-webapp:$operatonVersion:classes")
-    implementation("javax.annotation:javax.annotation-api:1.3.2")
-    implementation("javax.validation:validation-api:2.0.1.Final")
     runtimeOnly("org.yaml:snakeyaml")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:2.1.6")
     implementation("org.glassfish.jersey.inject:jersey-hk2:$jerseyVersion")
-    implementation("org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyVersion")
     implementation("org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVersion")
 
-    // Dependencies for Jetty 12 with ee10 (javax.servlet for Operaton 1.0.0 compatibility)
+    // Dependencies for Jetty 12 with ee10 which provides the Servlet API used by micronaut-servlet
     implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
     implementation("org.eclipse.jetty.ee10:jetty-ee10-servlet:$jettyVersion")
 

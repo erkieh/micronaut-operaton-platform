@@ -296,12 +296,12 @@ public class MnProcessEngineConfiguration extends ProcessEngineConfigurationImpl
         }
 
         @Override
-        protected Collection<? extends CommandInterceptor> getDefaultCommandInterceptorsTxRequired() {
+        protected Collection<CommandInterceptor> getDefaultCommandInterceptorsTxRequired() {
             return getCommandInterceptors(false);
         }
 
         @Override
-        protected Collection<? extends CommandInterceptor> getDefaultCommandInterceptorsTxRequiresNew() {
+        protected Collection<CommandInterceptor> getDefaultCommandInterceptorsTxRequiresNew() {
             return getCommandInterceptors(true);
         }
 
