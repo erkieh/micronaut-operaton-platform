@@ -17,6 +17,7 @@ package info.novatec.micronaut.operaton.bpm.feature.webapp;
 
 import info.novatec.micronaut.operaton.bpm.feature.Configuration;
 import info.novatec.micronaut.operaton.bpm.feature.initialization.ParallelInitializationWithoutProcessEngine;
+import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.Requires;
 import jakarta.inject.Singleton;
 import org.operaton.bpm.admin.impl.web.bootstrap.AdminContainerBootstrap;
@@ -66,14 +67,16 @@ public class JettyServerCustomizerRuntimeWebapp implements ParallelInitializatio
     private static final Logger log = LoggerFactory.getLogger(JettyServerCustomizerRuntimeWebapp.class);
 
     protected final Server server;
+    protected final BeanProvider<WebappRuntimeDelegateInitializer> webappRuntimeDelegateInitializerProvider;
 
     // Configuration must be resolved during construction - otherwise code might be blocked if a parallel thread constructs a bean, e.g. the ProcessEngine
     protected final String contextPath;
     protected final Map<String, String> csrfInitParams;
     protected final Map<String, String> headerSecurityInitParams;
 
-    public JettyServerCustomizerRuntimeWebapp(Server server, Configuration configuration) {
+    public JettyServerCustomizerRuntimeWebapp(Server server, Configuration configuration, BeanProvider<WebappRuntimeDelegateInitializer> webappRuntimeDelegateInitializerProvider) {
         this.server = server;
+        this.webappRuntimeDelegateInitializerProvider = webappRuntimeDelegateInitializerProvider;
         contextPath = configuration.getWebapps().getContextPath();
         csrfInitParams = getCsrfInitParams(configuration);
         headerSecurityInitParams = getHeaderSecurityInitParams(configuration);
@@ -154,6 +157,8 @@ public class JettyServerCustomizerRuntimeWebapp implements ParallelInitializatio
         webappsContextHandler.addEventListener(new WelcomeContainerBootstrap());
         webappsContextHandler.addEventListener(new HttpSessionMutexListener());
         webappsContextHandler.addEventListener(new ServletContextInitializedListener(csrfInitParams, headerSecurityInitParams));
+        // Must be registered after the container bootstraps because those install the default runtime delegates.
+        webappsContextHandler.addEventListener(new WebappRuntimeDelegateInitializedListener(webappRuntimeDelegateInitializerProvider));
 
         webappsContextHandler.setSessionHandler(new SessionHandler());
 
@@ -220,6 +225,24 @@ public class JettyServerCustomizerRuntimeWebapp implements ParallelInitializatio
                 }
                 log.debug("Filter {} for URL {} registered", filterName, urlPatterns);
             }
+        }
+    }
+
+    /**
+     * Replaces the runtime delegates installed by {@link CockpitContainerBootstrap} and
+     * {@link AdminContainerBootstrap} with transaction aware ones, see {@link WebappRuntimeDelegateInitializer}.
+     */
+    static class WebappRuntimeDelegateInitializedListener implements ServletContextListener {
+
+        protected final BeanProvider<WebappRuntimeDelegateInitializer> webappRuntimeDelegateInitializerProvider;
+
+        public WebappRuntimeDelegateInitializedListener(BeanProvider<WebappRuntimeDelegateInitializer> webappRuntimeDelegateInitializerProvider) {
+            this.webappRuntimeDelegateInitializerProvider = webappRuntimeDelegateInitializerProvider;
+        }
+
+        @Override
+        public void contextInitialized(ServletContextEvent sce) {
+            webappRuntimeDelegateInitializerProvider.get().installRuntimeDelegates();
         }
     }
 }

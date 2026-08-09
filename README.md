@@ -244,9 +244,9 @@ Here are some example applications:
 ## Supported JDKs
 
 We officially support the following JDKs:
-* JDK 17 (LTS)
-* JDK 21 (LTS)
 * JDK 25 (LTS)
+
+Note: Micronaut 5 requires JDK 25 or newer.
 
 # 🏆Advanced Topics
 
@@ -396,7 +396,7 @@ You can either
 Example with the LDAP plugin:
 
 ```groovy
-implementation("org.operaton.bpm.identity:operaton-identity-ldap:1.0.3")
+implementation("org.operaton.bpm.identity:operaton-identity-ldap:2.1.3")
 ```
 
 ```java
@@ -679,7 +679,7 @@ Process tests can easily be implemented with JUnit 5 by adding the `operaton-bpm
 <summary>Click to show Gradle dependencies</summary>
 
 ```groovy
-testImplementation("org.operaton.bpm:operaton-bpm-assert:1.0.3")
+testImplementation("org.operaton.bpm:operaton-bpm-assert:2.1.3")
 testImplementation("org.assertj:assertj-core")
 ```
 </details>
@@ -691,7 +691,7 @@ testImplementation("org.assertj:assertj-core")
 <dependency>
   <groupId>org.operaton.bpm</groupId>
   <artifactId>operaton-bpm-assert</artifactId>
-  <version>1.0.3</version>
+  <version>2.1.3</version>
   <scope>test</scope>
 </dependency>
 <dependency>
@@ -769,23 +769,23 @@ The following examples are based on Liquibase.
 When starting on an empty database, e.g. when using H2 for tests:
 ```xml
 <changeSet author="Tobias" id="1a" >
-  <comment>Create common baseline Operaton 7.24 for H2 based on SQL scripts from https://github.com/operaton/operaton/tree/main/database or Maven Central</comment>
-  <sqlFile path="operaton/h2_engine_1.0.3.sql" relativeToChangelogFile="true" dbms="h2" />
-  <sqlFile path="operaton/h2_identity_1.0.3.sql" relativeToChangelogFile="true" dbms="h2" />
+  <comment>Create common baseline for H2 based on SQL scripts from https://github.com/operaton/operaton/tree/main/database or Maven Central</comment>
+  <sqlFile path="operaton/h2_engine_<operaton-version>.sql" relativeToChangelogFile="true" dbms="h2" />
+  <sqlFile path="operaton/h2_identity_<operaton-version>.sql" relativeToChangelogFile="true" dbms="h2" />
 </changeSet>
 ```
 
 If you already have a persistent database with the database schema which is not yet managed by Liquibase, e.g. PostgreSQL:
 ```xml
 <changeSet author="Tobias" id="1b" >
-  <comment>Create common baseline Operaton 7.24 for PostgreSQL (even if schema already exists) based on SQL scripts from https://github.com/operaton/operaton/tree/main/database</comment>
+  <comment>Create common baseline for PostgreSQL (even if schema already exists) based on SQL scripts from https://github.com/operaton/operaton/tree/main/database</comment>
   <preConditions onFail="MARK_RAN">
     <not>
       <tableExists tableName="ACT_RU_JOB" />
     </not>
   </preConditions>
-  <sqlFile path="operaton/postgres_engine_1.0.3.sql" relativeToChangelogFile="true" dbms="postgresql" />
-  <sqlFile path="operaton/postgres_identity_1.0.3.sql" relativeToChangelogFile="true" dbms="postgresql" />
+  <sqlFile path="operaton/postgres_engine_<operaton-version>.sql" relativeToChangelogFile="true" dbms="postgresql" />
+  <sqlFile path="operaton/postgres_identity_<operaton-version>.sql" relativeToChangelogFile="true" dbms="postgresql" />
 </changeSet>
 ```
 

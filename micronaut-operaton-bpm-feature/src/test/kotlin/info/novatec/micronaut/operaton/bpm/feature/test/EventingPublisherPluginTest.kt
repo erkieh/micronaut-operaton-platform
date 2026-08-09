@@ -107,7 +107,7 @@ class EventingPublisherPluginTest {
 
         var count = 0
 
-        override fun onApplicationEvent(event: ExecutionEvent?) {
+        override fun onApplicationEvent(event: ExecutionEvent) {
             count++
         }
 

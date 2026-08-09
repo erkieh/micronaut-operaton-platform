@@ -20,7 +20,7 @@ dependencies {
 
     kaptTest(platform("io.micronaut.platform:micronaut-platform:$micronautVersion"))
     kaptTest("io.micronaut.data:micronaut-data-processor")
-    kaptTest("io.micronaut:micronaut-inject-java:$micronautVersion")
+    kaptTest("io.micronaut:micronaut-inject-java")
 
     // Integration of Transaction Management
     testAnnotationProcessor("io.micronaut.data:micronaut-data-processor")
@@ -28,13 +28,16 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    sourceCompatibility = JavaVersion.toVersion("25")
 }
 
 tasks {
     compileTestKotlin {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "25"
         }
     }
 }

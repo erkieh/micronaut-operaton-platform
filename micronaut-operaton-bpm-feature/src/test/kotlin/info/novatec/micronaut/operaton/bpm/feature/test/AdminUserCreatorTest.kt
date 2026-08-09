@@ -85,6 +85,14 @@ class AdminUserCreatorTest {
         @Inject
         lateinit var adminUserCreator: Optional<AdminUserCreator>
 
+        @BeforeEach
+        fun cleanupDatabase() {
+            // Clean up users created by other tests sharing the in-memory database
+            processEngine.identityService.createUserQuery().list()
+                .filter { it.id != configuration.adminUser.id }
+                .forEach { processEngine.identityService.deleteUser(it.id) }
+        }
+
         @Test
         fun adminUserCreated() {
             assertTrue(adminUserCreator.isPresent)
