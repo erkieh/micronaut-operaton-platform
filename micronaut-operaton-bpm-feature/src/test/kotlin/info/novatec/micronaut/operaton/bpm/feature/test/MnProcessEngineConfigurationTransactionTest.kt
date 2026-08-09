@@ -76,7 +76,7 @@ open class MnProcessEngineConfigurationTransactionTest {
 
     @Test
     open fun testSurroundingTransactionWithCommit() {
-        transactionManager.executeWrite { transactionStatus: TransactionStatus<Connection?> ->
+        transactionManager.executeWrite { transactionStatus: TransactionStatus<Connection> ->
             try {
                 startProcess(TX_WITH_COMMIT)
                 return@executeWrite startProcess(TX_WITH_COMMIT)

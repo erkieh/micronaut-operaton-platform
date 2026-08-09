@@ -40,7 +40,8 @@ dependencies {
 
     kaptTest platform("io.micronaut.platform:micronaut-platform:$micronautVersion")
     kaptTest("io.micronaut.data:micronaut-data-processor")
-    kapt("io.micronaut:micronaut-inject-java:$micronautVersion")
+    kapt(platform("io.micronaut.platform:micronaut-platform:$micronautVersion"))
+    kapt("io.micronaut:micronaut-inject-java")
 
     // Integration of Transaction Management
     api("io.micronaut.data:micronaut-data-tx")
@@ -76,8 +77,11 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion('21')
-    targetCompatibility = JavaVersion.toVersion('21')
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    sourceCompatibility = JavaVersion.toVersion('25')
+    targetCompatibility = JavaVersion.toVersion('25')
     withJavadocJar()
     withSourcesJar()
 }
@@ -89,7 +93,7 @@ test {
 tasks {
     compileTestKotlin {
         kotlinOptions {
-            jvmTarget = "21"
+            jvmTarget = "25"
         }
     }
 }

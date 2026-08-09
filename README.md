@@ -244,9 +244,9 @@ Here are some example applications:
 ## Supported JDKs
 
 We officially support the following JDKs:
-* JDK 17 (LTS)
-* JDK 21 (LTS)
 * JDK 25 (LTS)
+
+Note: Micronaut 5 requires JDK 25 or newer.
 
 # 🏆Advanced Topics
 

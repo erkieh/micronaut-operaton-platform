@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '25'
 
       - name: Extract secring.gpg to sign files
         run: echo -n $SECRING_GPG | base64 --decode > micronaut-operaton-bpm-feature/secring.gpg
